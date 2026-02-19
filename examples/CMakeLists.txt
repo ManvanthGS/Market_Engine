@@ -1,2 +1,2 @@
-add_executable(example example_usage.cpp)
-target_link_libraries(example PRIVATE market_engine)
+add_executable(orderbook_example orderbook_example.cpp)
+target_link_libraries(orderbook_example PRIVATE market_engine)

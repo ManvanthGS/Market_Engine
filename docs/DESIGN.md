@@ -7,15 +7,16 @@ This document provides detailed design specifications for the Market Engine, a h
 ## Table of Contents
 
 1. [Market Model](#market-model)
-2. [Architecture](#architecture)
-3. [Core Components](#core-components)
-4. [Data Structures](#data-structures)
-5. [Order Matching Algorithm](#order-matching-algorithm)
-6. [Performance Considerations](#performance-considerations)
-7. [Thread Safety](#thread-safety)
-8. [Testing Strategy](#testing-strategy)
-9. [Development Phases](#development-phases)
-10. [Future Extensions](#future-extensions)
+2. [Non Goals](#non-goals)
+3. [Architecture](#architecture)
+4. [Core Components](#core-components)
+5. [Data Structures](#data-structures)
+6. [Order Matching Algorithm](#order-matching-algorithm)
+7. [Performance Considerations](#performance-considerations)
+8. [Thread Safety](#thread-safety)
+9. [Testing Strategy](#testing-strategy)
+10. [Development Phases](#development-phases)
+11. [Future Extensions](#future-extensions)
 
 ## Market Model
 
@@ -27,6 +28,18 @@ The market operates using:
 - FIFO matching at each price level
 
 Trades occur when a new order is willing to buy at the seller’s price or sell at the buyer’s price. It takes whatever quantity is available on the other side of the book. If the order is bigger than what’s available, part of it gets filled right away, and the rest stays in the order book waiting for future matches.
+
+## Non-Goals
+
+This project explicitly does NOT implement:
+- Trading strategies or alpha models
+- Portfolio or risk management
+- Broker connectivity or exchange gateways
+- Smart order routing
+- Clearing, settlement, or accounting systems
+- User interfaces
+
+Market Engine focuses strictly on the exchange-side matching logic and market microstructure.
 
 ## Architecture
 The architecture is designed to prioritize deterministic behavior, low-latency execution, and clear separation of responsibilities, with future extensibility toward multithreaded execution.
@@ -238,10 +251,10 @@ function submitOrder(order):
             matchQty = min(bestBid.quantity, order.remainingQuantity)
             executeTrade(order, bestBid, matchQty)
             bestBid = orderBook.getPreviousBid()
-    
+
     if order.remainingQuantity > 0:
         orderBook.addOrder(order)
-    
+
     return order
 ```
 

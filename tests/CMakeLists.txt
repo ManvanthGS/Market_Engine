@@ -9,7 +9,7 @@ FetchContent_MakeAvailable(googletest)
 enable_testing()
 
 add_executable(market_engine_tests
-    test_app.cpp
+    orderbook_tests.cpp
 )
 
 target_link_libraries(market_engine_tests
