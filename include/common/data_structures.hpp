@@ -4,7 +4,8 @@
 
 enum class OrderType {
     Market,
-    Limit
+    Limit,
+    Stop
 };
 
 enum class Side {
@@ -12,9 +13,9 @@ enum class Side {
     Sell
 };
 
-struct  Order {
+struct OrderEntry {
     u64 order_id;
-    u64 price;
+    float price;
     u64 quantity;
     u64 remaining_quantity;
     Side side;
