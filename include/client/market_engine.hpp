@@ -14,7 +14,7 @@ struct OrderRequest
 class MarketEngine
 {
   private:
-    OrderBook order_book;
+    OrderBook order_book_;
 
     // helper function to convert OrderRequest to OrderEntry
     OrderEntry Convert_To_Order_Entry(const OrderRequest& order_request, const TimeStamp& timestamp, const u64 remaining_quantity);
