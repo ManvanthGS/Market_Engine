@@ -15,4 +15,7 @@ class MatchingEngine
     ~MatchingEngine();
 
     int Process_Order(const OrderEntry& order_entry);
+    void Get_Order_Book_Snapshot();
+    void Get_Best_Bid_Ask();
+    void Get_Order_Depth(u32 depth);
 };

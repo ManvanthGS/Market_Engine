@@ -1,11 +1,10 @@
 #pragma once
 
-#include <chrono>
 #include <iomanip>
 #include <sstream>
 #include <string>
 
-using TimeStamp = std::chrono::time_point<std::chrono::high_resolution_clock>;
+#include "types.hpp"
 
 // A static time class to handle time-related operations
 class Timer
@@ -23,8 +22,8 @@ class Timer
     }
 
     // Get current timestamp
-    static std::string Get_Current_Timestamp()
+    static TimeStamp Get_Current_Timestamp()
     {
-        return TimeStamp_To_String(std::chrono::high_resolution_clock::now());
+        return std::chrono::high_resolution_clock::now();
     }
 };

@@ -1,6 +1,8 @@
 #pragma once
 
-#include "orderbook/orderbook.hpp"
+#include "common/data_structures.hpp"
+#include "common/timer.hpp"
+#include "orderbook/matching_engine.hpp"
 
 struct OrderRequest
 {
@@ -13,7 +15,7 @@ struct OrderRequest
 class MarketEngine
 {
   private:
-    OrderBook order_book_;
+    MatchingEngine market_engine_;
 
     // helper function to convert OrderRequest to OrderEntry
     OrderEntry Convert_To_Order_Entry(const OrderRequest& order_request, const TimeStamp& timestamp, const u64 remaining_quantity);
