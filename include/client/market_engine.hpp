@@ -4,7 +4,6 @@
 
 struct OrderRequest
 {
-    u64 order_id;
     float price;
     u64 quantity;
     Side side;

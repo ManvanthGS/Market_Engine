@@ -12,13 +12,13 @@ OrderBook::~OrderBook() {}
 int OrderBook::Add_Order_Entry(const OrderEntry& order_entry)
 {
     // Add to order_entries map
-    order_entries[order_entry.order_id] = order_entry;
+    order_entries_[order_entry.order_id] = order_entry;
 
     // Add to buy_orders or sell_orders based on side
     if (order_entry.side == Side::Buy) {
-        buy_orders[order_entry.price].push_back(order_entry);
+        buy_orders_[order_entry.price].push_back(order_entry);
     } else {
-        sell_orders[order_entry.price].push_back(order_entry);
+        sell_orders_[order_entry.price].push_back(order_entry);
     }
 
     return 0; // Success
@@ -26,8 +26,8 @@ int OrderBook::Add_Order_Entry(const OrderEntry& order_entry)
 
 int OrderBook::Cancel_Order_Entry(const u64 order_id)
 {
-    auto it = order_entries.find(order_id);
-    if (it == order_entries.end()) {
+    auto it = order_entries_.find(order_id);
+    if (it == order_entries_.end()) {
         return -1; // Order not found
     }
 
@@ -35,25 +35,25 @@ int OrderBook::Cancel_Order_Entry(const u64 order_id)
 
     // Remove from buy_orders or sell_orders based on side
     if (order_entry.side == Side::Buy) {
-        auto& orders_at_price = buy_orders[order_entry.price];
+        auto& orders_at_price = buy_orders_[order_entry.price];
         orders_at_price.erase(std::remove_if(orders_at_price.begin(), orders_at_price.end(),
                                             [&](const OrderEntry& entry) { return entry.order_id == order_id; }),
                               orders_at_price.end());
         if (orders_at_price.empty()) {
-            buy_orders.erase(order_entry.price);
+            buy_orders_.erase(order_entry.price);
         }
     } else {
-        auto& orders_at_price = sell_orders[order_entry.price];
+        auto& orders_at_price = sell_orders_[order_entry.price];
         orders_at_price.erase(std::remove_if(orders_at_price.begin(), orders_at_price.end(),
                                             [&](const OrderEntry& entry) { return entry.order_id == order_id; }),
                               orders_at_price.end());
         if (orders_at_price.empty()) {
-            sell_orders.erase(order_entry.price);
+            sell_orders_.erase(order_entry.price);
         }
     }
 
     // Remove from order_entries map
-    order_entries.erase(it);
+    order_entries_.erase(it);
 
     return 0; // Success
 }
@@ -100,12 +100,12 @@ OrderBookSnapshot OrderBook::Get_Order_Book_Snapshot()
     OrderBookSnapshot snapshot;
 
     // Collect buy orders
-    for (const auto& [price, orders] : buy_orders) {
+    for (const auto& [price, orders] : buy_orders_) {
         snapshot.buy_orders.insert(snapshot.buy_orders.end(), orders.begin(), orders.end());
     }
 
     // Collect sell orders
-    for (const auto& [price, orders] : sell_orders) {
+    for (const auto& [price, orders] : sell_orders_) {
         snapshot.sell_orders.insert(snapshot.sell_orders.end(), orders.begin(), orders.end());
     }
 
@@ -116,14 +116,14 @@ BestBidAsk OrderBook::Get_Best_Bid_Ask()
 {
     BestBidAsk best_bid_ask;
 
-    if (!buy_orders.empty()) {
-        const auto& best_bid = buy_orders.begin()->second.front();
+    if (!buy_orders_.empty()) {
+        const auto& best_bid = buy_orders_.begin()->second.front();
         best_bid_ask.bid_price = best_bid.price;
         best_bid_ask.bid_quantity = best_bid.remaining_quantity;
     }
 
-    if (!sell_orders.empty()) {
-        const auto& best_ask = sell_orders.begin()->second.front();
+    if (!sell_orders_.empty()) {
+        const auto& best_ask = sell_orders_.begin()->second.front();
         best_bid_ask.ask_price = best_ask.price;
         best_bid_ask.ask_quantity = best_ask.remaining_quantity;
     }
@@ -142,7 +142,7 @@ OrderDepth OrderBook::Get_Order_Depth(u32 depth)
     OrderDepth order_depth;
 
     // Get buy depth
-    for (const auto& [price, orders] : buy_orders) {
+    for (const auto& [price, orders] : buy_orders_) {
         if (order_depth.buy_depth.size() >= depth) {
             break;
         }
@@ -154,7 +154,7 @@ OrderDepth OrderBook::Get_Order_Depth(u32 depth)
     }
 
     // Get sell depth
-    for (const auto& [price, orders] : sell_orders) {
+    for (const auto& [price, orders] : sell_orders_) {
         if (order_depth.sell_depth.size() >= depth) {
             break;
         }
@@ -170,8 +170,8 @@ OrderDepth OrderBook::Get_Order_Depth(u32 depth)
 
 OrderEntry OrderBook::Get_Order_Entry(const u64 order_id)
 {
-    auto it = order_entries.find(order_id);
-    if (it != order_entries.end()) {
+    auto it = order_entries_.find(order_id);
+    if (it != order_entries_.end()) {
         return it->second;
     }
     throw std::runtime_error("Order not found");

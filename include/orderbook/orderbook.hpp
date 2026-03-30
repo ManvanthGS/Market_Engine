@@ -12,13 +12,13 @@ class OrderBook
 {
   private:
     // Map of order_id to OrderEntry for quick access
-    std::unordered_map<u64, OrderEntry> order_entries;
+    std::unordered_map<u64, OrderEntry> order_entries_;
 
     // Map of price to list of buy orders sorted in descending order
-    std::map<float, std::vector<OrderEntry>, std::greater<float>> buy_orders;
+    std::map<float, std::vector<OrderEntry>, std::greater<float>> buy_orders_;
 
     // Map of price to list of sell orders sorted in ascending order
-    std::map<float, std::vector<OrderEntry>, std::less<float>> sell_orders;
+    std::map<float, std::vector<OrderEntry>, std::less<float>> sell_orders_;
 
   public:
     // Constructor and Destructor

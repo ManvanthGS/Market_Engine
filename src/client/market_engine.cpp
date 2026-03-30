@@ -1,5 +1,6 @@
 #include "client/market_engine.hpp"
 #include "common/timer.hpp"
+#include "common/uid_generator.hpp"
 
 MarketEngine::MarketEngine() {}
 
@@ -8,7 +9,7 @@ MarketEngine::~MarketEngine() {}
 OrderEntry MarketEngine::Convert_To_Order_Entry(const OrderRequest& order_request, const TimeStamp& timestamp, const u64 remaining_quantity)
 {
     OrderEntry order_entry;
-    order_entry.order_id = order_request.order_id;
+    order_entry.order_id = UIDGenerator::Get_Next_ID();
     order_entry.price = order_request.price;
     order_entry.quantity = order_request.quantity;
     order_entry.remaining_quantity = remaining_quantity;
@@ -22,7 +23,6 @@ OrderEntry MarketEngine::Convert_To_Order_Entry(const OrderRequest& order_reques
 OrderRequest MarketEngine::Convert_To_Order_Request(const OrderEntry& order_entry)
 {
     OrderRequest order_request;
-    order_request.order_id = order_entry.order_id;
     order_request.price = order_entry.price;
     order_request.quantity = order_entry.quantity;
     order_request.side = order_entry.side;
@@ -35,7 +35,9 @@ int MarketEngine::Add_Order(const OrderRequest& order_request)
 {
     OrderEntry order_entry = Convert_To_Order_Entry(order_request, Timer::Get_Current_Timestamp(), order_request.quantity);
 
-    return order_book_.Add_Order_Entry(order_entry);
+    int error = order_book_.Add_Order_Entry(order_entry);
+
+    return error < 0 ? error : order_entry.order_id; // Return order ID on success, error code on failure
 }
 
 int MarketEngine::Cancel_Order(const u64 order_id)
@@ -47,7 +49,9 @@ int MarketEngine::Modify_Order(const OrderRequest& order_request)
 {
     OrderEntry order_entry = Convert_To_Order_Entry(order_request, Timer::Get_Current_Timestamp(), order_request.quantity);
 
-    return order_book_.Modify_Order_Entry(order_entry);
+    int error = order_book_.Add_Order_Entry(order_entry);
+
+    return error < 0 ? error : order_entry.order_id; // Return order ID on success, error code on failure
 }
 
 void MarketEngine::Get_Order_Book_Snapshot()
@@ -62,5 +66,5 @@ void MarketEngine::Get_Best_Bid_Ask()
 
 void MarketEngine::Get_Order_Depth()
 {
-    order_book_.Get_Order_Depth();
+    order_book_.Get_Order_Depth(5);
 }

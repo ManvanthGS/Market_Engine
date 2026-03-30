@@ -4,8 +4,7 @@
 
 enum class OrderType {
     Market,
-    Limit,
-    Stop
+    Limit
 };
 
 enum class Side {
