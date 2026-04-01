@@ -55,17 +55,17 @@ int MarketEngine::Add_Order(const OrderRequest& order_request)
 //     return error < 0 ? error : order_entry.order_id; // Return order ID on success, error code on failure
 // }
 
-void MarketEngine::Get_Order_Book_Snapshot()
+ OrderBookSnapshot MarketEngine::Get_Order_Book_Snapshot()
 {
-    market_engine_.Get_Order_Book_Snapshot();
+    return market_engine_.Get_Order_Book_Snapshot();
 }
 
-void MarketEngine::Get_Best_Bid_Ask()
+BestBidAsk MarketEngine::Get_Best_Bid_Ask()
 {
-    market_engine_.Get_Best_Bid_Ask();
+    return market_engine_.Get_Best_Bid_Ask();
 }
 
-void MarketEngine::Get_Order_Depth()
+OrderDepth MarketEngine::Get_Order_Depth(u32 depth)
 {
-    market_engine_.Get_Order_Depth(5);
+    return market_engine_.Get_Order_Depth(depth);
 }

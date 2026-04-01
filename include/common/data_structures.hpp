@@ -30,11 +30,11 @@ struct OrderBookSnapshot {
 
 struct BestBidAsk
 {
-    float bid_price;
-    float ask_price;
-    u64 bid_quantity;
-    u64 ask_quantity;
-    float spread;
+    float best_bid_price;
+    float best_ask_price;
+    u64 best_bid_quantity;
+    u64 best_ask_quantity;
+    float bid_ask_spread;
 };
 
 struct OrderDepth

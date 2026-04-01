@@ -118,20 +118,20 @@ BestBidAsk OrderBook::Get_Best_Bid_Ask()
 
     if (!buy_orders_.empty()) {
         const auto& best_bid = buy_orders_.begin()->second.front();
-        best_bid_ask.bid_price = best_bid.price;
-        best_bid_ask.bid_quantity = best_bid.remaining_quantity;
+        best_bid_ask.best_bid_price = best_bid.price;
+        best_bid_ask.best_bid_quantity = best_bid.remaining_quantity;
     }
 
     if (!sell_orders_.empty()) {
         const auto& best_ask = sell_orders_.begin()->second.front();
-        best_bid_ask.ask_price = best_ask.price;
-        best_bid_ask.ask_quantity = best_ask.remaining_quantity;
+        best_bid_ask.best_ask_price = best_ask.price;
+        best_bid_ask.best_ask_quantity = best_ask.remaining_quantity;
     }
 
-    if (best_bid_ask.bid_price > 0 && best_bid_ask.ask_price > 0) {
-        best_bid_ask.spread = best_bid_ask.ask_price - best_bid_ask.bid_price;
+    if (best_bid_ask.best_bid_price > 0 && best_bid_ask.best_ask_price > 0) {
+        best_bid_ask.bid_ask_spread = best_bid_ask.best_ask_price - best_bid_ask.best_bid_price;
     } else {
-        best_bid_ask.spread = 0; // No valid bid or ask
+        best_bid_ask.bid_ask_spread = 0; // No valid bid or ask
     }
 
     return best_bid_ask;
@@ -175,4 +175,14 @@ OrderEntry OrderBook::Get_Order_Entry(const u64 order_id)
         return it->second;
     }
     throw std::runtime_error("Order not found");
+}
+
+BuyOrdersMap const& OrderBook::Get_Buy_Orders_Map()
+{
+    return buy_orders_;
+}
+
+SellOrdersMap const& OrderBook::Get_Sell_Orders_Map()
+{
+    return sell_orders_;
 }

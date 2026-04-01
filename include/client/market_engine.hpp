@@ -32,7 +32,7 @@ class MarketEngine
     int Cancel_Order(const u64 order_id);
     int Modify_Order(const OrderRequest& order_request);
 
-    void Get_Order_Book_Snapshot();
-    void Get_Best_Bid_Ask();
-    void Get_Order_Depth();
+    OrderBookSnapshot Get_Order_Book_Snapshot();
+    BestBidAsk Get_Best_Bid_Ask();
+    OrderDepth Get_Order_Depth(u32 depth);
 };
