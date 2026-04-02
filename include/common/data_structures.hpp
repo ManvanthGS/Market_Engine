@@ -35,6 +35,8 @@ struct BestBidAsk
     u64 best_bid_quantity;
     u64 best_ask_quantity;
     float bid_ask_spread;
+
+    BestBidAsk() : best_bid_price(0), best_ask_price(0), best_bid_quantity(0), best_ask_quantity(0), bid_ask_spread(0) {}
 };
 
 struct OrderDepth

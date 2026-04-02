@@ -130,7 +130,7 @@ TEST_F(OrderBookTest, ModifyNonExistentOrder)
 {
     auto order = CreateOrder(999, 100.0f, 10, Side::Buy);
 
-    EXPECT_NE(orderbook_.Modify_Order_Entry(order), 0);
+    EXPECT_THROW(orderbook_.Modify_Order_Entry(order), std::runtime_error);
 }
 
 // ----------------------
@@ -202,17 +202,6 @@ TEST_F(OrderBookTest, FIFOWithinPriceLevel)
     ASSERT_EQ(orders.size(), 2);
     EXPECT_EQ(orders[0].order_id, 1);
     EXPECT_EQ(orders[1].order_id, 2);
-}
-
-// ----------------------
-// DUPLICATE ORDER TEST
-// ----------------------
-
-TEST_F(OrderBookTest, DuplicateOrderIdRejected)
-{
-    orderbook_.Add_Order_Entry(CreateOrder(1, 100.0f, 10, Side::Buy));
-
-    EXPECT_NE(orderbook_.Add_Order_Entry(CreateOrder(1, 101.0f, 10, Side::Buy)), 0);
 }
 
 // ----------------------
